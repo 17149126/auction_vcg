@@ -1,0 +1,309 @@
+
+	
+	public static void main2(String[] args) {
+		Vcg vcg = new Vcg();
+		Limitation limitation = new Limitation(23);
+		Output output = new Output();
+		
+		ArrayList<Bid> al = new ArrayList<Bid>();
+
+		// Here we have four bids
+		Bid bid2 = new Bid("Joseph", "Cork", "11", "Student", null, 11.0);
+		Bid bid1 = new Bid("Priyanka", "Dublin", "10", "Student", null, 10.0);
+		Bid bid3 = new Bid("John", "Limrick", "12", "software engineer", null, 20.0);
+		
+		// This is exceed bid 
+		Bid bid4 = new Bid("Test", "Galway", "12", "engineer", null, 31.0);				
+		
+		// Prepare ArrayList 
+		al.add(bid1);
+		al.add(bid2);
+		al.add(bid3);
+		al.add(bid4);
+		al.add(new Bid("Test1", "Galway", "12", "engineer", null, 29.0
+				));
+		
+		al.add(new Bid("Test2", "Galway", "12", "engineer", null, 17.0
+				));
+
+		al.add(new Bid("Test3", "Galway", "12", "engineer", null, 21.0
+				));		
+
+		al.add(new Bid("Test4", "Galway", "12", "engineer", null, 23.0
+				));				
+		
+		// 
+		System.out.println("========== User Input ==========");
+		output.printOutput(al);
+		
+		// Check the limitations
+		limitation.getValidBids(al);
+		System.out.println("========== After removing exceeding bids ==========");
+		output.printOutput(al);
+
+		// Get output bid
+		System.out.println("========== Output Bid ==========");
+		Bid bid = vcg.secondPriceOcution(al);
+		
+		// Get bids for multiple resources
+		List<Bid> winners = vcg.AcutionForNResourcesVCG(al);
+		System.out.println(winners.toString());
+		
+		System.out.println(bid);
+		
+//		Datacenter datacenter0 = null;
+//		try {
+//				datacenter0 = createDatacenter("Datacenter_0");
+//			
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			System.out.println(e.getMessage());
+//		}
+//		Rc rc1 = new Rc(datacenter0);
+////		Rc rc2 = new Rc(createDatacenter("Datacenter_1"));		
+//		List<Rc> rclist = new ArrayList<>();
+//		rclist.add(rc1);
+////		rclist.add(rc2);
+//		Pool pool = new Pool(rclist);
+//		
+//		
+//		System.out.println(rc1.dc.toString());
+//		Backbone BackBoneObject = Backbone.getInstance(pool);
+//		
+//		BackBoneObject.allocatePool(winners);
+//		
+//		System.out.println(BackBoneObject.getUtilization());
+		
+		
+		Log.printLine("Starting CloudSimExample1...");
+
+		try {
+			// First step: Initialize the CloudSim package. It should be called
+			// before creating any entities.
+			int num_user = 1; // number of cloud users
+			Calendar calendar = Calendar.getInstance();
+			boolean trace_flag = false; // mean trace events
+
+			// Initialize the CloudSim library
+			CloudSim.init(num_user, calendar, trace_flag);
+
+			// Second step: Create Datacenters
+			// Datacenters are the resource providers in CloudSim. We need at
+			// list one of them to run a CloudSim simulation
+
+			// Third step: Create Broker
+			DatacenterBroker broker = createBroker();
+			int brokerId = broker.getId();
+
+			// Fourth step: Create one virtual machine
+			vmlist = new ArrayList<Vm>();
+
+			// VM description
+			int vmid = 0;
+			int mips = 1000;
+			long size = 10000; // image size (MB)
+			int ram = 512; // vm memory (MB)
+			long bw = 1000;
+			int pesNumber = 1; // number of cpus
+			String vmm = "Xen"; // VMM name
+
+			// create VM
+			Vm vm = new Vm(vmid, brokerId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+
+			// add the VM to the vmList
+			vmlist.add(vm);
+
+			// submit vm list to the broker
+			broker.submitVmList(vmlist);
+
+			// Fifth step: Create one Cloudlet
+			cloudletList = new ArrayList<Cloudlet>();
+
+			// Cloudlet properties
+			int id = 0;
+			long length = 400000;
+			long fileSize = 300;
+			long outputSize = 300;
+			UtilizationModel utilizationModel = new UtilizationModelFull();
+
+			Cloudlet cloudlet = new Cloudlet(id, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+			cloudlet.setUserId(brokerId);
+			cloudlet.setVmId(vmid);
+
+			// add the cloudlet to the list
+			cloudletList.add(cloudlet);
+
+			// submit cloudlet list to the broker
+			broker.submitCloudletList(cloudletList);
+
+			Datacenter datacenter0 = createDatacenter("Datacenter_0");
+			// Sixth step: Starts the simulation
+			CloudSim.startSimulation();
+
+
+			/*
+			 * Custom Module Starts here
+			 * 
+			 */
+
+			
+			System.out.println(datacenter0.getName());
+
+			System.out.println(datacenter0.getId());
+			System.out.println(datacenter0.getVmList().toString());
+			
+			// TODO: VM List is zero !!
+			System.out.println(datacenter0.getVmList().size());
+			
+			Rc rc1 = null;// new Rc(datacenter0);
+			List<Rc> rclist = new ArrayList<>();
+			rclist.add(rc1);
+			Pool pool = new Pool(rclist);
+			System.out.println(pool.toString());
+			System.out.println(rc1.dc.toString());
+			Backbone BackBoneObject = Backbone.getInstance(pool);			
+			BackBoneObject.allocatePool(winners);				
+			System.out.println(rc1.dc.toString());
+			System.out.println(BackBoneObject.getUtilization());
+
+			CloudSim.stopSimulation();
+
+			//Final step: Print results when simulation is over
+			List<Cloudlet> newList = broker.getCloudletReceivedList();
+			printCloudletList(newList);
+
+			Log.printLine("CloudSimExample1 finished!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.printLine("Unwanted errors happen");
+		}
+		
+	}
+
+	
+	/**
+	 * Creates the datacenter.
+	 *
+	 * @param name the name
+	 *
+	 * @return the datacenter
+	 */
+	private static Datacenter createDatacenter(String name) {
+
+		// Here are the steps needed to create a PowerDatacenter:
+		// 1. We need to create a list to store
+		// our machine
+		List<Host> hostList = new ArrayList<Host>();
+
+		// 2. A Machine contains one or more PEs or CPUs/Cores.
+		// In this example, it will have only one core.
+		List<Pe> peList = new ArrayList<Pe>();
+
+		int mips = 1000;
+
+		// 3. Create PEs and add these into a list.
+		peList.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
+
+		// 4. Create Host with its id and list of PEs and add them to the list
+		// of machines
+		int hostId = 0;
+		int ram = 2048; // host memory (MB)
+		long storage = 1000000; // host storage
+		int bw = 10000;
+		VmSchedulerTimeShared sc = new VmSchedulerTimeShared(peList);
+		hostList.add(
+			new Host(
+				hostId,
+				new RamProvisionerSimple(ram),
+				new BwProvisionerSimple(bw),
+				storage,
+				peList,
+				sc
+			)
+		); // This is our machine
+
+
+		// 5. Create a DatacenterCharacteristics object that stores the
+		// properties of a data center: architecture, OS, list of
+		// Machines, allocation policy: time- or space-shared, time zone
+		// and its price (G$/Pe time unit).
+		String arch = "x86"; // system architecture
+		String os = "Linux"; // operating system
+		String vmm = "Xen";
+		double time_zone = 10.0; // time zone this resource located
+		double cost = 3.0; // the cost of using processing in this resource
+		double costPerMem = 0.05; // the cost of using memory in this resource
+		double costPerStorage = 0.001; // the cost of using storage in this
+										// resource
+		double costPerBw = 0.0; // the cost of using bw in this resource
+		LinkedList<Storage> storageList = new LinkedList<Storage>(); // we are not adding SAN
+													// devices by now
+
+		DatacenterCharacteristics characteristics = new DatacenterCharacteristics(
+				arch, os, vmm, hostList, time_zone, cost, costPerMem,
+				costPerStorage, costPerBw);
+
+		// 6. Finally, we need to create a PowerDatacenter object.
+		Datacenter datacenter = null;
+		try {
+			datacenter = new Datacenter(name, characteristics, new VmAllocationPolicySimple(hostList), storageList, 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return datacenter;
+	}
+	
+	// We strongly encourage users to develop their own broker policies, to
+	// submit vms and cloudlets according
+	// to the specific rules of the simulated scenario
+	/**
+	 * Creates the broker.
+	 *
+	 * @return the datacenter broker
+	 */
+	private static DatacenterBroker createBroker() {
+		DatacenterBroker broker = null;
+		try {
+			broker = new DatacenterBroker("Broker");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return broker;
+	}
+
+	/**
+	 * Prints the Cloudlet objects.
+	 *
+	 * @param list list of Cloudlets
+	 */
+	private static void printCloudletList(List<Cloudlet> list) {
+		int size = list.size();
+		Cloudlet cloudlet;
+
+		String indent = "    ";
+		Log.printLine();
+		Log.printLine("========== OUTPUT ==========");
+		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent
+				+ "Data center ID" + indent + "VM ID" + indent + "Time" + indent
+				+ "Start Time" + indent + "Finish Time");
+
+		DecimalFormat dft = new DecimalFormat("###.##");
+		for (int i = 0; i < size; i++) {
+			cloudlet = list.get(i);
+			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
+
+			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS) {
+				Log.print("SUCCESS");
+
+				Log.printLine(indent + indent + cloudlet.getResourceId()
+						+ indent + indent + indent + cloudlet.getVmId()
+						+ indent + indent
+						+ dft.format(cloudlet.getActualCPUTime()) + indent
+						+ indent + dft.format(cloudlet.getExecStartTime())
+						+ indent + indent
+						+ dft.format(cloudlet.getFinishTime()));
+			}
+		}
+	}
