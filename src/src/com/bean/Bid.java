@@ -11,7 +11,7 @@ public class Bid {
 	String address;
 	String phoneNumber;
 	String occupation;
-	Instant bidTime;
+	String bidTime;
 	double biddingPrice;
 	int bidId;
 	public ArrayList<Rc> allocatedRc = new ArrayList<>();
@@ -21,7 +21,7 @@ public class Bid {
 	public long Size = 1000;
 	
 	
-	public Bid (String customerName, String address, String phoneNumber, String occupation, Instant bidTime,
+	public Bid (String customerName, String address, String phoneNumber, String occupation, String bidTime,
 			double biddingPrice) {
 		super();
 		this.bidId = 0;
@@ -34,7 +34,7 @@ public class Bid {
 				
 	}
 	
-	public Bid(int bidId,String customerName, String address, String phoneNumber, String occupation, Instant bidTime,
+	public Bid(int bidId,String customerName, String address, String phoneNumber, String occupation, String bidTime,
 			double biddingPrice,int Ram,
 	long Bw,
 	long Size, int duration
@@ -78,10 +78,10 @@ public class Bid {
 	public void setOccupation(String occupation) {
 		this.occupation = occupation;
 	}
-	public Instant getBidTime() {
+	public String getBidTime() {
 		return bidTime;
 	}
-	public void setBidTime(Instant bidTime) {
+	public void setBidTime(String bidTime) {
 		this.bidTime = bidTime;
 	}
 	public double getBiddingPrice() {
@@ -98,7 +98,7 @@ public class Bid {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Customer Id : "+this.bidId+" and BW: "+this.bw+ " and RAM: "+this.Ram +" and DISK: "+this.Size +"  at price = "+this.biddingPrice;
+		return "BidId : "+this.bidId+" and BW: "+this.bw+ " and RAM: "+this.Ram +" and DISK: "+this.Size +"  at price = "+this.biddingPrice;
 	}
 
 	public int getBiddingId() {

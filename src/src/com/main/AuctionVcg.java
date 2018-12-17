@@ -1,8 +1,10 @@
 package src.com.main;
 
+import java.security.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -68,15 +70,21 @@ public class AuctionVcg {
 			int ram = (int) getRandomDoubleBetweenRange(1,64);
 			int bw = (int) getRandomDoubleBetweenRange(1000,9000);			
 			int volume = (int) getRandomDoubleBetweenRange(1,40); // Ssd
+			int regionIndex = (int) getRandomDoubleBetweenRange(0,7); // Ssd
 			
-			
+			String bidId = "";
+			for (int j = 0; j < 10; j++) {
+				bidId+=(int) getRandomDoubleBetweenRange(0,7);
+
+			}
+
 
 			double price = 0.007 + (0.023 - 0.007) * r.nextDouble();
 			System.out.println(price);
 
 			int duration =  (int)getRandomDoubleBetweenRange(1,300); // in hour
 			
-			al.add(new Bid(i+1,i+1+"", "region_"+(i+1), "11", "Student", null, price,
+			al.add(new Bid(i+1,bidId,regions[regionIndex], "11", "Student", new Date(System.currentTimeMillis()).toString(), price,
 					ram,bw,volume,duration));
 		}
 		

@@ -18,12 +18,10 @@ public class Output {
 	public void printOutput(ArrayList<Bid> bid) {
 		for (int i = 0; i < bid.size(); i++) {
 			System.out.println("========== Bid"+ i +" ==========");
-			System.out.println("Customer Name : "+bid.get(i).getCustomerName());
-			System.out.println("Address "+bid.get(i).getAddress());
-			System.out.println("Phone Number "+bid.get(i).getPhoneNumber());
-			System.out.println("Occupation "+bid.get(i).getOccupation());
-			System.out.println("Bid Time "+bid.get(i).getBidTime());
-			System.out.println("Bidding Price "+bid.get(i).getBiddingPrice());
+			System.out.println("BidID: "+bid.get(i).getCustomerName());
+			System.out.println("Region: "+bid.get(i).getAddress());
+			System.out.println("BidTime: "+bid.get(i).getBidTime());
+			System.out.println("BiddingPrice: "+bid.get(i).getBiddingPrice());
 		}
 	}
 }
