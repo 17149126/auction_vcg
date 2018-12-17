@@ -118,8 +118,8 @@ public class AuctionVcg {
 			
 			
 			// Get bids for multiple resources
-			List<Bid> winners = vcg.AcutionForNResourcesVCG(al);
-//			List<Bid> winners = vcg.AcutionForNResourcesFIFO(al);
+//			List<Bid> winners = vcg.AcutionForNResourcesVCG(al);
+			List<Bid> winners = vcg.AcutionForNResourcesFIFO(al);
 //			List<Bid> winners = vcg.AcutionForNResources(al);
 
 			System.out.println(winners.toString());		
